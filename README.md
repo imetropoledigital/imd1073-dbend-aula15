@@ -1,8 +1,8 @@
-## Iniciando
+## Apresentação
 
 Projeto trabalhado durante a disciplina de desenvolvimento backend do curso técnico do instituto Metrópole Digital UFRN.
 
-## Iniciar
+## Iniciando
 
 Para iniciar o projeto em modo de desenvolvimento execute os seguintes comandos:
 
