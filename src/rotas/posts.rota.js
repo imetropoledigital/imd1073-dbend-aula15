@@ -3,34 +3,13 @@ const router = express.Router()
 const postMid = require('../middleware/validarPost.middleware')
 const { Post, Usuario } = require('../db/models')
 var multer  = require('multer')
-const multerS3 = require('multer-s3')
 const aws = require('aws-sdk')
 const path = require('path')
 const ErrorHandler = require('../utils/ErrorHandler')
 const autenticar = require('../middleware/autenticacao.mid')
 
-const isS3 = process.env.STORAGE === 's3'
 
-aws.config.update({
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    region: 'us-east-1'
-});
-
-const s3 = new aws.S3()
-
-const s3Storage = multerS3({
-    s3: s3,
-    bucket: process.env.S3_BUCKET_NAME,
-    key: function (req, file, cb) {
-        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname))
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname)) 
-     }
-})
-
-const diskStorage = multer.diskStorage({
+const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'public/uploads')
     },
@@ -38,8 +17,6 @@ const diskStorage = multer.diskStorage({
        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname)) 
     }
 })
-
-const storage = isS3 ? s3Storage : diskStorage
 
 const fileFilter = (req, file, cb) => {
     const extensoes = /jpeg|jpg/i
