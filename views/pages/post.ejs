@@ -1,0 +1,12 @@
+<%- contentFor('body') %>
+
+<h1 class="mb-4">
+    <%=post.titulo%>
+</h1>
+<p class="lead">Postado por <a href="#"><%=post.Usuario.email%></a></p>
+<hr>
+<p class="text-muted">postado em <%=post.postadoEm%></p>
+<hr>
+<img class="img-fluid rounded mb-4" src="<%=post.foto%>" alt="Computador">
+
+<%-post.texto%>

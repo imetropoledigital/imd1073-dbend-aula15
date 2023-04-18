@@ -1,0 +1,30 @@
+<%- contentFor('body') %>
+
+<h1 class="mb-4">
+  <small>Posts Recentes</small>
+</h1>
+
+<hr />
+
+<% posts.forEach(function (post) { %>
+
+<div class="card mb-4">
+  <img
+    class="card-img-top"
+    src="<%=post.foto%>"
+    alt="Imagem de capa do card"
+  />
+  
+  <div class="card-body">
+    <h5 class="card-title"><%=post.titulo%></h5>
+    <p class="card-text">
+      <%-post.texto.substr(0,200)%>...
+    </p>
+    <a href="/post/<%=post.id%>" class="btn btn-primary">Leia mais</a>
+  </div>
+  <div class="card-footer text-muted">
+    Postado por <a href="#"><%=post.Usuario.email%></a> <%=post.postadoEm%>
+  </div>
+</div>
+
+<% }) %>

@@ -1,0 +1,193 @@
+openapi: '3.0.2'
+info:
+  title: IMD Blog API!
+  version: '1.0'
+  description: API do blog do IMD
+  contact:
+    name: Gustavo Leitão
+servers:
+  - url: http://localhost:8080/api
+    description: Servidor de teste
+paths:
+  /posts:
+    post:
+      description: Adiciona uma postagem no blog
+      operationId: postPost
+      summary: Adiciona um post
+      tags:
+        - Posts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Não autorizado
+          content:
+            application/json:
+              schema:
+                $ref:  "#/components/schemas/Erro"
+        '403':
+          description: Acesso negado
+          content:
+            application/json:
+              schema:
+                $ref:  "#/components/schemas/Erro"
+                  
+  /usuarios/login:
+    post:
+      operationId: userLogin
+      summary: Realiza autenticação na API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: foo@bar.com
+                senha:
+                  type: string
+                  example: algosecreto
+      tags:
+        - Autenticação
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsImlzcyI6ImltZC1iYWNrZW5kIiwiYXVkIjoiaW1kLWZyb250ZW5kIiwiZW1haWwiOiJuZXd0b25AZ21haWwuY29tIiwia
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref:  "#/components/schemas/Erro"
+  /usuarios:
+    get:
+      operationId: getUsuarios
+      summary: Obtém todos os usuários do sistema
+      tags:
+        - Usuários
+      responses:
+        '200':
+          description: Lista de usuários
+          content:
+            appication/json:
+              schema:
+                type: object
+                properties:
+                  usuarios:
+                    type: array
+                    items:
+                      $ref:  "#/components/schemas/Usuario"
+
+    delete:
+      tags:
+        - Usuários
+      description: Remove um usuáriodeterminado ID
+      operationId: deleteUserByID
+      summary: Remove um usuário
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Usuário deletado com sucesso!"
+        '400':
+          description: 400 Bad Request
+          content:
+            application/json:
+              schema:
+                $ref:  "#/components/schemas/Erro"
+
+  /usuarios/{id}:
+    get:
+      operationId: getById
+      summary: Obtém um usuário a partir do id
+      tags:
+        - Usuários
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Retorna um usuário
+          content:
+            appication/json:
+              schema:
+                type: object
+                properties:
+                  usuario:
+                    type: object
+                    $ref: "#/components/schemas/Usuario"
+                    
+        '400':
+          description: Bad Request
+          content:
+            appication/json:
+              schema: 
+                $ref:  "#/components/schemas/Erro"
+      
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+  schemas:
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Id do usuário
+          example: 9
+        email:
+          type: string
+          description: E-mail do usuário
+          example: foo@bar.com.br
+    Post:
+      type: object
+      properties:
+        titulo:
+          type: string
+          example: Titulo do seu post
+        texto:
+          type: string
+          example: Conteudo do seu post...
+        userId:
+          type: integer
+          example: 9
+    Erro:
+      type: object
+      properties:
+        msg:
+          type: string
+          description: Mensagem de erro
+          example: Usuário não encontrado!
+
+security:
+  - bearerAuth: []  
