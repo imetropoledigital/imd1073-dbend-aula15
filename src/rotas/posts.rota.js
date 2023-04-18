@@ -8,6 +8,7 @@ const path = require('path')
 const ErrorHandler = require('../utils/ErrorHandler')
 const autenticar = require('../middleware/autenticacao.mid')
 
+const URL_PATH = process.env.URL_PATH || ''
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -47,7 +48,6 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/:id/upload', upload.single('foto'), async (req, res) => {
-    console.log(req.file)
     const id = req.params.id
     const post = await Post.findByPk(id)
     if (post){
@@ -60,11 +60,11 @@ router.post('/:id/upload', upload.single('foto'), async (req, res) => {
 })
 
 router.post('/', async (req, res, next) => {
-    const data = req.body
-    if (req.file){
-        data.foto = getFullpathFilename(req.file)
-    }
     try{
+        const data = req.body
+        if (req.file){
+            data.foto = getFullpathFilename(req.file)
+        }
         const post = await Post.create(data)
         res.json({msg: "Post adicionado com sucesso!"})
     }catch (err){
