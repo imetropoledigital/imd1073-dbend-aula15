@@ -99,11 +99,7 @@ router.put('/', async (req, res) => {
     }
 })
 function getFullpathFilename(filename) {
-    if (isS3){
-        return filename.location
-    }else{
-        return `${URL_PATH}/static/uploads/${filename.filename}`
-    }
+    return `${URL_PATH}/static/uploads/${filename.filename}`
 }
 
 function prepararResultado(post){
